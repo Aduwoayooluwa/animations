@@ -120,7 +120,7 @@ export default function JavaScriptAnimations() {
           <h3 className="text-xl font-semibold mb-4">requestAnimationFrame</h3>
           <p className="text-gray-600 mb-4">
             The requestAnimationFrame API is the foundation of smooth JavaScript animations.
-            It synchronizes with the browser's refresh rate for optimal performance.
+            It synchronizes with the browser&apos;s refresh rate for optimal performance.
           </p>
           <div className="bg-white p-6 rounded-lg shadow-sm">
             <div className="h-32 relative flex items-center">
