@@ -437,6 +437,166 @@ function CSSPlayground() {
   );
 }
 
+// Animation Breakdown Component
+function AnimationBreakdown() {
+  const [progress, setProgress] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [selectedSpeed, setSelectedSpeed] = useState<'slow' | 'normal' | 'frame-by-frame'>('normal');
+  const animationRef = useRef<number | null>(null);
+  
+  const speeds = {
+    'slow': 0.25,
+    'normal': 1,
+    'frame-by-frame': 0
+  };
+  
+  useEffect(() => {
+    if (isPlaying && selectedSpeed !== 'frame-by-frame') {
+      const startTime = Date.now();
+      const duration = 2000; // 2 seconds for a full animation cycle
+      
+      const animate = () => {
+        const elapsed = (Date.now() - startTime) * speeds[selectedSpeed];
+        const newProgress = Math.min((elapsed % duration) / duration, 1);
+        setProgress(newProgress);
+        
+        animationRef.current = requestAnimationFrame(animate);
+      };
+      
+      animationRef.current = requestAnimationFrame(animate);
+      return () => {
+        if (animationRef.current) cancelAnimationFrame(animationRef.current);
+      };
+    }
+  }, [isPlaying, selectedSpeed]);
+  
+  const playAnimation = () => {
+    setIsPlaying(true);
+  };
+  
+  const pauseAnimation = () => {
+    setIsPlaying(false);
+    if (animationRef.current) cancelAnimationFrame(animationRef.current);
+  };
+  
+  const advanceFrame = () => {
+    setProgress(prev => Math.min(prev + 0.05, 1));
+  };
+  
+  const resetFrame = () => {
+    setProgress(0);
+  };
+  
+  // Calculate animation values based on progress
+  const translateY = -50 * Math.sin(progress * Math.PI); // Simulates a bounce
+  const opacity = 0.5 + 0.5 * Math.sin(progress * Math.PI * 2); // Fades in and out
+  const scale = 1 + 0.3 * Math.sin(progress * Math.PI); // Grows and shrinks
+  
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4">
+        <div className="bg-gray-50 p-4 rounded-lg flex flex-col items-center">
+          <div className="relative h-[200px] w-full flex items-center justify-center">
+            <motion.div
+              className="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg"
+              animate={{ 
+                y: translateY,
+                scale: scale,
+                opacity: opacity 
+              }}
+            />
+            
+            {/* Visual indicators */}
+            <div className="absolute bottom-4 left-4 right-4 flex flex-col gap-2">
+              <div className="flex justify-between text-xs text-gray-500">
+                <span>Progress: {Math.round(progress * 100)}%</span>
+                <span>Scale: {scale.toFixed(2)}</span>
+              </div>
+              <div className="h-1 bg-gray-200 rounded overflow-hidden">
+                <div 
+                  className="h-full bg-blue-500" 
+                  style={{width: `${progress * 100}%`}}
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex flex-wrap gap-2 mt-4 justify-center">
+            <button
+              onClick={isPlaying ? pauseAnimation : playAnimation}
+              className="px-3 py-1.5 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              {isPlaying ? 'Pause' : 'Play'}
+            </button>
+            
+            <button
+              onClick={resetFrame}
+              className="px-3 py-1.5 text-sm bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+            >
+              Reset
+            </button>
+            
+            {selectedSpeed === 'frame-by-frame' && (
+              <button
+                onClick={advanceFrame}
+                className="px-3 py-1.5 text-sm bg-purple-500 text-white rounded hover:bg-purple-600"
+              >
+                Next Frame
+              </button>
+            )}
+          </div>
+          
+          <div className="flex gap-3 mt-4">
+            {(Object.keys(speeds) as Array<keyof typeof speeds>).map(speed => (
+              <label key={speed} className="inline-flex items-center">
+                <input
+                  type="radio"
+                  checked={selectedSpeed === speed}
+                  onChange={() => {
+                    setSelectedSpeed(speed);
+                    // If switching to frame-by-frame, pause animation
+                    if (speed === 'frame-by-frame') {
+                      pauseAnimation();
+                    }
+                  }}
+                  className="mr-1.5"
+                />
+                <span className="text-sm text-gray-700">{speed.replace('-', ' ')}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+        <div className="p-4 bg-blue-50 rounded-lg">
+          <h4 className="font-medium mb-2">Translation</h4>
+          <p className="text-gray-600">
+            The element moves up and down in a sine wave pattern.
+            <span className="block mt-1 font-mono">y: {translateY.toFixed(0)}px</span>
+          </p>
+        </div>
+        
+        <div className="p-4 bg-purple-50 rounded-lg">
+          <h4 className="font-medium mb-2">Scaling</h4>
+          <p className="text-gray-600">
+            The element grows and shrinks based on the progress.
+            <span className="block mt-1 font-mono">scale: {scale.toFixed(2)}</span>
+          </p>
+        </div>
+        
+        <div className="p-4 bg-green-50 rounded-lg">
+          <h4 className="font-medium mb-2">Opacity</h4>
+          <p className="text-gray-600">
+            The element fades in and out in a cyclical pattern.
+            <span className="block mt-1 font-mono">opacity: {opacity.toFixed(2)}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ReactAnimations() {
   const [isVisible, setIsVisible] = useState(true);
   const [items, setItems] = useState(["Item 1", "Item 2", "Item 3"]);
@@ -495,6 +655,14 @@ export default function ReactAnimations() {
           }`}
         >
           CSS Playground
+        </button>
+        <button
+          onClick={() => setActiveTab("breakdown")}
+          className={`px-3 py-2 sm:px-4 text-sm sm:text-base whitespace-nowrap ${
+            activeTab === "breakdown" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-600"
+          }`}
+        >
+          Animation Breakdown
         </button>
         <button
           onClick={() => setActiveTab("accessibility")}
@@ -829,6 +997,22 @@ export default function ReactAnimations() {
               create your own animations!
             </p>
             <CSSPlayground />
+          </div>
+        </section>
+      )}
+
+      {activeTab === "breakdown" && (
+        <section className="space-y-6">
+          <div>
+            <h3 className="text-xl font-semibold mb-4">
+              Animation Breakdown
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Understand animations by breaking them down into individual steps. 
+              Use slow motion or step through frame-by-frame to see exactly how
+              properties change over time.
+            </p>
+            <AnimationBreakdown />
           </div>
         </section>
       )}
