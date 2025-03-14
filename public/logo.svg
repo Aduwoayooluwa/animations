@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="240" fill="#1A1A2E" />
+  
+
+  <g>
+    <!-- Motion Path -->
+    <path d="M128 256C128 184.471 184.471 128 256 128C327.529 128 384 184.471 384 256C384 327.529 327.529 384 256 384" 
+          stroke="#4361EE" stroke-width="24" stroke-linecap="round" />
+    
+    <!-- Moving Element 1 -->
+    <circle cx="256" cy="128" r="32" fill="#4CC9F0">
+      <animate attributeName="cx" values="256;384;256;128;256" dur="4s" repeatCount="indefinite" />
+      <animate attributeName="cy" values="128;256;384;256;128" dur="4s" repeatCount="indefinite" />
+    </circle>
+    
+    <!-- Moving Element 2 -->
+    <circle cx="128" cy="256" r="24" fill="#F72585">
+      <animate attributeName="cx" values="128;256;384;256;128" dur="4s" repeatCount="indefinite" />
+      <animate attributeName="cy" values="256;384;256;128;256" dur="4s" repeatCount="indefinite" />
+    </circle>
+    
+    <!-- Moving Element 3 -->
+    <circle cx="384" cy="256" r="16" fill="#7209B7">
+      <animate attributeName="cx" values="384;256;128;256;384" dur="4s" repeatCount="indefinite" />
+      <animate attributeName="cy" values="256;128;256;384;256" dur="4s" repeatCount="indefinite" />
+    </circle>
+  </g>
+  
+  <!-- Central Element -->
+  <circle cx="256" cy="256" r="48" fill="#3A0CA3" />
+  <circle cx="256" cy="256" r="32" fill="#4361EE" />
+  <circle cx="256" cy="256" r="16" fill="#4CC9F0" />
+</svg>
