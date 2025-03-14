@@ -15,6 +15,29 @@ export const metadata: Metadata = {
       { url: '/logo.svg', sizes: '180x180', type: 'image/svg+xml' },
     ],
   },
+  openGraph: {
+    title: "Animation Playground",
+    description: "Interactive learning platform for frontend animations",
+    url: "https://learn-animations.aayooluwa.com",
+    siteName: "Animation Playground",
+    images: [
+      {
+        url: "https://learn-animations.aayooluwa.com/logo_.png",
+        width: 1200,
+        height: 630,
+        alt: "Animation Playground Logo",
+      }
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Animation Playground",
+    description: "Interactive learning platform for frontend animations",
+    creator: "@codingpastor",
+    images: ["https://learn-animations.aayooluwa.com/logo_.png"],
+  },
 };
 
 export default function RootLayout({
