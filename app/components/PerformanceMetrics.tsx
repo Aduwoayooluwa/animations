@@ -13,8 +13,8 @@ export default function PerformanceMetrics() {
   const [isMonitoring, setIsMonitoring] = useState(false)
   const [animationCount, setAnimationCount] = useState(10)
   const [useTransform, setUseTransform] = useState(true)
-  const frameRef = useRef<number>()
-  const lastTimeRef = useRef<number>()
+  const frameRef = useRef<number | null>(null)
+  const lastTimeRef = useRef<number | null>(null)
 
   // FPS monitoring
   useEffect(() => {
