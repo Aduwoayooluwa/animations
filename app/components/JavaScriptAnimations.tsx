@@ -8,8 +8,8 @@ export default function JavaScriptAnimations() {
   const boxRef = useRef<HTMLDivElement>(null)
   const [isRAFRunning, setIsRAFRunning] = useState(false)
   const [isGSAPRunning, setIsGSAPRunning] = useState(false)
-  const rafIdRef = useRef<number>()
-  const startTimeRef = useRef<number>()
+  const rafIdRef = useRef<number | null>(null)
+  const startTimeRef = useRef<number | null>(null)
 
   // requestAnimationFrame example
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function JavaScriptAnimations() {
 
     const animate = (timestamp: number) => {
       if (!startTimeRef.current) startTimeRef.current = timestamp
-      const progress = (timestamp - startTimeRef.current) / 2000 // 2 seconds duration
+      const progress = (timestamp - startTimeRef.current) / 2000 
       
       if (boxRef.current) {
         boxRef.current.style.transform = `translateX(${Math.sin(progress * Math.PI * 2) * 100}px)`
@@ -27,7 +27,7 @@ export default function JavaScriptAnimations() {
         rafIdRef.current = requestAnimationFrame(animate)
       } else {
         setIsRAFRunning(false)
-        startTimeRef.current = undefined
+        startTimeRef.current = null
       }
     }
 
